@@ -33,7 +33,7 @@ void poly_destroy(polynomial *eqn)
     }
 }
 
-void poly_print(const polynomial *eqn)
+void poly_print( polynomial *eqn)
 {
     if(!eqn)
     {
@@ -55,7 +55,7 @@ void poly_print(const polynomial *eqn)
     poly_print(eqn->next);
 }
 ///////////////////////////////////////////////
-polynomial * simplify(const polynomial *p)
+polynomial * simplify( polynomial *p)
 {
     polynomial *front = p;
     polynomial *cursor;
@@ -79,7 +79,7 @@ polynomial * simplify(const polynomial *p)
 }
 
 
-polynomial *poly_add(const polynomial *a, const polynomial *b)
+polynomial *poly_add( polynomial *a,  polynomial *b)
 {
 
     polynomial *sum = calloc(sizeof(polynomial), 1);
@@ -117,7 +117,7 @@ polynomial *poly_add(const polynomial *a, const polynomial *b)
 }
 
 
-polynomial *poly_sub(const polynomial *a, const polynomial *b)
+polynomial *poly_sub( polynomial *a,  polynomial *b)
 {
     simplify(a);
     simplify(b);
@@ -156,9 +156,9 @@ polynomial *poly_sub(const polynomial *a, const polynomial *b)
 }
 
 
-char *poly_to_string(const polynomial *p)
+char *poly_to_string( polynomial *p)
 {
-    const polynomial *cursor = p;
+     polynomial *cursor = p;
     char *buffer = calloc(42 , 1);
 
     while(cursor != NULL)
