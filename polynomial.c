@@ -97,6 +97,8 @@ void poly_iterate(polynomial *p, void (*transform)(struct term *))
 
 polynomial *poly_add( polynomial *a,  polynomial *b)
 {
+    simplify(a);
+    simplify(b);
     polynomial *sum = term_create(0, 0);
     polynomial *cursor = sum;
     while(a && b)
@@ -139,39 +141,42 @@ polynomial *poly_sub( polynomial *a,  polynomial *b)
     polynomial *cursor = sum;
     while(a && b)
     {
-        //printf("ac : %d\n", a->coeff);
+        //If the coefficients are equal, remove one from the other.
         if(a->exp == b->exp)
         {
-            //puts("equal");
             cursor->exp = a->exp;
             cursor->coeff = (a->coeff - b->coeff);
             a = a->next;
             b = b->next;
         }
+        //If a is larger give it it's own node, and advance the pointer.
         else if(a->exp > b->exp)
         {
-            //puts("a");
             cursor->exp = a->exp;
             cursor->coeff = a->coeff;
             a = a->next;
         }
+        //If b is larger give it it's own node, and advance the pointer.
         else if(a->exp < b->exp)
         {
-            //puts("b");
             cursor->exp = b->exp;
-            cursor->coeff = b->coeff;
+            cursor->coeff = b->coeff * -1;
             b = b->next;
         }
+        //Build the next blank term before looping.
         cursor->next = term_create(0, 0);
         cursor = cursor->next;
     }
-    //printf("sum c: %d\n", sum->coeff);
         return(sum);
 }
 
 
 char *poly_to_string( polynomial *p)
 {
+    //Cyclically adds each term to a buffer using the logic
+    //from poly_print, and sprintf. I would have just used
+    //snprintf on poly_print, except it had to be a void
+    //function...
     polynomial *cursor = p;
     char *buffer = calloc(42 , 1);
 
@@ -204,6 +209,9 @@ bool poly_equal(polynomial *a, polynomial *b)
 {
     while(a != NULL)
     {
+        //Checks values for equality after first checking if b exists.
+        //Only checks on b because if one exists and the other doesn't
+        //the polynomials clearly aren't equal.
         if((b == NULL) || (a->exp != b->exp) || (a->coeff != b->coeff))
         {
             puts("false");
@@ -275,6 +283,7 @@ int main(void)
     d->next = e;
     puts("pre sort~~");
     polySort(&a);
+    puts("a1");
     poly_print(a);
     puts("~~post sort");
     //simplify(&a);
@@ -284,12 +293,14 @@ int main(void)
     //simplify(&a);
     poly_print(a);
     puts("");
-    poly_equal(first, a);
+    poly_equal(a, a);
     char *result = (poly_to_string(first));
     printf("\nresult: %s\n", result);
 
     poly_iterate(a, pp);
     printf("eval: %lf\n", poly_eval(first, 2));
+    puts("a2");
+    poly_print(a);
 
     poly_destroy(first);
     poly_destroy(a);
