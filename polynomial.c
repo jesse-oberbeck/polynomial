@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <math.h>
 
 struct term {
     int coeff;
@@ -78,41 +80,53 @@ polynomial * simplify( polynomial *p)
     return(front);
 }
 
+void pp(polynomial *a)
+{
+    //This function exists only to test poly_iterate.
+    printf("TERM COEF: %d\n", a->coeff);
+}
+
+void poly_iterate(polynomial *p, void (*transform)(struct term *))
+{
+    while(p != NULL)
+    {
+        transform(p);
+        p = p->next;
+    }
+}
 
 polynomial *poly_add( polynomial *a,  polynomial *b)
 {
-
-    polynomial *sum = calloc(sizeof(polynomial), 1);
+    polynomial *sum = term_create(0, 0);
     polynomial *cursor = sum;
     while(a && b)
     {
-        //printf("ac : %d\n", a->coeff);
+        //If the coefficients are equal, add them together.
         if(a->exp == b->exp)
         {
-            //puts("equal");
             cursor->exp = a->exp;
             cursor->coeff = (a->coeff + b->coeff);
             a = a->next;
             b = b->next;
         }
+        //If a is larger give it it's own node, and advance the pointer.
         else if(a->exp > b->exp)
         {
-            //puts("a");
             cursor->exp = a->exp;
             cursor->coeff = a->coeff;
             a = a->next;
         }
+        //If b is larger give it it's own node, and advance the pointer.
         else if(a->exp < b->exp)
         {
-            //puts("b");
             cursor->exp = b->exp;
             cursor->coeff = b->coeff;
             b = b->next;
         }
-        cursor->next = calloc(sizeof(polynomial), 1);
+        //Build the next blank term before looping.
+        cursor->next = term_create(0, 0);
         cursor = cursor->next;
     }
-    //printf("sum c: %d\n", sum->coeff);
         return(sum);
 }
 
@@ -121,7 +135,7 @@ polynomial *poly_sub( polynomial *a,  polynomial *b)
 {
     simplify(a);
     simplify(b);
-    polynomial *sum = calloc(sizeof(polynomial), 1);
+    polynomial *sum = term_create(0, 0);
     polynomial *cursor = sum;
     while(a && b)
     {
@@ -148,7 +162,7 @@ polynomial *poly_sub( polynomial *a,  polynomial *b)
             cursor->coeff = b->coeff;
             b = b->next;
         }
-        cursor->next = calloc(sizeof(polynomial), 1);
+        cursor->next = term_create(0, 0);
         cursor = cursor->next;
     }
     //printf("sum c: %d\n", sum->coeff);
@@ -158,7 +172,7 @@ polynomial *poly_sub( polynomial *a,  polynomial *b)
 
 char *poly_to_string( polynomial *p)
 {
-     polynomial *cursor = p;
+    polynomial *cursor = p;
     char *buffer = calloc(42 , 1);
 
     while(cursor != NULL)
@@ -186,34 +200,100 @@ char *poly_to_string( polynomial *p)
     return(buffer);
 }
 
+bool poly_equal(polynomial *a, polynomial *b)
+{
+    while(a != NULL)
+    {
+        if((b == NULL) || (a->exp != b->exp) || (a->coeff != b->coeff))
+        {
+            puts("false");
+            return(false);
+        }
+        a = a->next;
+        b = b->next;
+    }
+    puts("true");
+    return(true);
+}
+
+void polySort(polynomial **p)
+{
+    //Ugly bubble sort, but it's better than a Bogo sort,
+    //and a merge sort is only slightly better,
+    //and much more difficult to implement.
+    polynomial *front = *p;
+    for(int i = 0; i < 5; ++i)
+    {
+        polynomial *cursor = front;
+        while(cursor != NULL)
+        {
+            if((cursor->next != NULL) && (cursor->exp < cursor->next->exp))
+            {
+                int tempExp = cursor->exp;
+                cursor->exp = cursor->next->exp;
+                cursor->next->exp = tempExp;
+                
+                int tempCoeff = cursor->coeff;
+                cursor->coeff = cursor->next->coeff;
+                cursor->next->coeff = tempCoeff;
+            }
+            cursor = cursor->next;
+        }
+    }
+}
+
+double poly_eval(polynomial *p, double x)
+{
+    double sum = 0;
+    while(p != NULL)
+    {
+        sum += pow(x, p->exp) * p->coeff;
+        p = p->next;
+    }
+    return(sum);
+}
 
 ///////////////////////////////////////////////
 int main(void)
 {
     polynomial *first = term_create(3, 3);
-    polynomial *second = term_create(5, 1);
+    polynomial *second = term_create(5, 2);
     polynomial *third = term_create(1, 0);
 
     first->next = second;
     second->next = third;
 
-    polynomial *a = term_create(7, 2);
-    polynomial *b = term_create(3, 2);
-    polynomial *c = term_create(5, 0);
-    polynomial *d = term_create(4, 0);
+    polynomial *a = term_create(4, 1);
+    polynomial *b = term_create(12, 3);
+    polynomial *c = term_create(19, 5);
+    polynomial *d = term_create(4, 1);
     polynomial *e = term_create(3, 0);
 
     a->next = b;
     b->next = c;
     c->next = d;
     d->next = e;
+    puts("pre sort~~");
+    polySort(&a);
+    poly_print(a);
+    puts("~~post sort");
     //simplify(&a);
     polynomial *sum = poly_sub(first, a);
     poly_print(sum);
     puts("");
     //simplify(&a);
     poly_print(a);
+    puts("");
+    poly_equal(first, a);
     char *result = (poly_to_string(first));
     printf("\nresult: %s\n", result);
+
+    poly_iterate(a, pp);
+    printf("eval: %lf\n", poly_eval(first, 2));
+
+    poly_destroy(first);
+    poly_destroy(a);
+    poly_destroy(sum);
+    free(result);
     puts("");
 }
