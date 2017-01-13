@@ -55,6 +55,30 @@ void poly_print(const polynomial *eqn)
     poly_print(eqn->next);
 }
 ///////////////////////////////////////////////
+polynomial * simplify(const polynomial *p)
+{
+    polynomial *front = p;
+    polynomial *cursor;
+    cursor = p;
+    while(cursor->next != NULL)
+    {
+        if(cursor->exp == cursor->next->exp)
+        {
+            cursor->coeff = cursor->coeff + cursor->next->coeff;
+            polynomial *temp = cursor->next;
+            cursor->next = cursor->next->next;
+            free(temp);
+            
+        }
+        else
+        {
+            cursor = cursor->next;
+        }
+    }
+    return(front);
+}
+
+
 polynomial *poly_add(const polynomial *a, const polynomial *b)
 {
 
@@ -65,55 +89,103 @@ polynomial *poly_add(const polynomial *a, const polynomial *b)
         //printf("ac : %d\n", a->coeff);
         if(a->exp == b->exp)
         {
-            puts("equal");
+            //puts("equal");
             cursor->exp = a->exp;
             cursor->coeff = (a->coeff + b->coeff);
             a = a->next;
             b = b->next;
-            cursor->next = calloc(sizeof(polynomial), 1);
-            cursor = cursor->next;
         }
         else if(a->exp > b->exp)
         {
-            puts("a");
+            //puts("a");
             cursor->exp = a->exp;
             cursor->coeff = a->coeff;
-            if(a->next != NULL)
-            {
-                a = a->next;
-            }
-            cursor->next = calloc(sizeof(polynomial), 1);
-            cursor = cursor->next;
+            a = a->next;
         }
         else if(a->exp < b->exp)
         {
-            puts("b");
+            //puts("b");
             cursor->exp = b->exp;
             cursor->coeff = b->coeff;
-            if(b->next != NULL)
-            {
-                b = b->next;
-            }
-            cursor->next = calloc(sizeof(polynomial), 1);
-            cursor = cursor->next;
+            b = b->next;
         }
-
+        cursor->next = calloc(sizeof(polynomial), 1);
+        cursor = cursor->next;
     }
     //printf("sum c: %d\n", sum->coeff);
         return(sum);
 }
 
-//WRITE A SIMPLIFY FUNCTION
+
+polynomial *poly_sub(const polynomial *a, const polynomial *b)
+{
+    simplify(a);
+    simplify(b);
+    polynomial *sum = calloc(sizeof(polynomial), 1);
+    polynomial *cursor = sum;
+    while(a && b)
+    {
+        //printf("ac : %d\n", a->coeff);
+        if(a->exp == b->exp)
+        {
+            //puts("equal");
+            cursor->exp = a->exp;
+            cursor->coeff = (a->coeff - b->coeff);
+            a = a->next;
+            b = b->next;
+        }
+        else if(a->exp > b->exp)
+        {
+            //puts("a");
+            cursor->exp = a->exp;
+            cursor->coeff = a->coeff;
+            a = a->next;
+        }
+        else if(a->exp < b->exp)
+        {
+            //puts("b");
+            cursor->exp = b->exp;
+            cursor->coeff = b->coeff;
+            b = b->next;
+        }
+        cursor->next = calloc(sizeof(polynomial), 1);
+        cursor = cursor->next;
+    }
+    //printf("sum c: %d\n", sum->coeff);
+        return(sum);
+}
 
 
-/*
 char *poly_to_string(const polynomial *p)
 {
-    char string[42];
-    snprintf(string, 42, "%s", poly_print(p));
-    return(string);
+    const polynomial *cursor = p;
+    char *buffer = calloc(42 , 1);
+
+    while(cursor != NULL)
+    {
+        if(!cursor)
+        {
+            sprintf(buffer, "Nothing");
+            return(buffer);
+        }
+        if(cursor->coeff)
+        {
+            sprintf(buffer,"%s%c%d", buffer, cursor->coeff > 0 ? '+' : '\0', cursor->coeff);
+            if(cursor->exp > 1)
+            {
+                sprintf(buffer, "%sx^%d ", buffer, cursor->exp);
+            }
+            else if(cursor->exp == 1)
+            {
+                sprintf(buffer, "%sx ", buffer);
+            }
+            printf(" ");
+        }
+        cursor = cursor->next;
+    }
+    return(buffer);
 }
-*/
+
 
 ///////////////////////////////////////////////
 int main(void)
@@ -126,14 +198,22 @@ int main(void)
     second->next = third;
 
     polynomial *a = term_create(7, 2);
-    polynomial *b = term_create(-5, 1);
-    polynomial *c = term_create(3, 0);
+    polynomial *b = term_create(3, 2);
+    polynomial *c = term_create(5, 0);
+    polynomial *d = term_create(4, 0);
+    polynomial *e = term_create(3, 0);
 
     a->next = b;
     b->next = c;
-
-    polynomial *sum = poly_add(first, a);
+    c->next = d;
+    d->next = e;
+    //simplify(&a);
+    polynomial *sum = poly_sub(first, a);
     poly_print(sum);
-    //char *result = (poly_to_string(first));
+    puts("");
+    //simplify(&a);
+    poly_print(a);
+    char *result = (poly_to_string(first));
+    printf("\nresult: %s\n", result);
     puts("");
 }
