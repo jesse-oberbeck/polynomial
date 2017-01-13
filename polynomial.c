@@ -3,13 +3,8 @@
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
+#include "polynomial.h"
 
-struct term {
-    int coeff;
-    unsigned int exp;
-    struct term *next;
-};
-typedef struct term polynomial;
 
 
 
@@ -262,6 +257,7 @@ double poly_eval(polynomial *p, double x)
 }
 
 ///////////////////////////////////////////////
+/*
 int main(void)
 {
     polynomial *first = term_create(3, 3);
@@ -307,4 +303,4 @@ int main(void)
     poly_destroy(sum);
     free(result);
     puts("");
-}
+}*/
