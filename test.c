@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include "polynomial.h"
 
-int main(void)
+int
+main(
+    void)
 {
     polynomial *first = term_create(3, 3);
     polynomial *second = term_create(5, 2);
@@ -15,6 +17,7 @@ int main(void)
     polynomial *a = term_create(4, 1);
     polynomial *b = term_create(12, 3);
     polynomial *c = term_create(19, 5);
+
     //polynomial *d = term_create(4, 1);
     //polynomial *e = term_create(3, 0);
 
@@ -29,6 +32,7 @@ int main(void)
     puts("~~post sort");
     //simplify(&a);
     polynomial *sum = poly_sub(first, a);
+
     poly_print(sum);
     puts("");
     //simplify(&a);
@@ -36,14 +40,16 @@ int main(void)
     puts("");
     poly_equal(a, a);
     char *result = (poly_to_string(first));
+
     printf("\nresult: %s\n", result);
 
     poly_iterate(a, pp);
     printf("eval: %lf\n", poly_eval(first, 2));
     puts("a2");
     poly_print(a);
-    
+
     polynomial *mult = poly_mult(first, a);
+
     puts("\n\n~~~~~~~~~~~~~~~");
     poly_print(first);
     puts("");
