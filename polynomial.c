@@ -93,39 +93,6 @@ poly_mult(
 }
 
 polynomial *
-poly_div(
-    polynomial * a,
-    polynomial * b)
-{
-    //Divides polynomials a and b by finding the quotient
-    //of every pair of coefficients, and the difference of every
-    //pair of exponents, then sorting and reducing the pairs.
-    int count = 0;
-    polynomial *mult = term_create(0, 0);
-    polynomial *first = mult;
-    polynomial *firstB = b;
-
-    while (a != NULL)
-    {
-        while (b != NULL)
-        {
-            count += 1;
-            mult->coeff = a->coeff / b->coeff;
-            mult->exp = a->exp - b->exp;
-            b = b->next;
-            mult->next = term_create(0, 0);
-            mult = mult->next;
-        }
-        a = a->next;
-        b = firstB;
-    }
-    printf("COUNT: %d\n", count);
-    poly_sort(&first);
-    simplify(first);
-    return (first);
-}
-
-polynomial *
 simplify(
     polynomial * p)
 {

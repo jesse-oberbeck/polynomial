@@ -53,8 +53,3 @@ double poly_eval(
 polynomial *poly_mult(
     polynomial * a,
     polynomial * b);
-    
-    polynomial *
-poly_div(
-    polynomial * a,
-    polynomial * b);
