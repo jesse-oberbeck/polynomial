@@ -32,3 +32,5 @@ void polySort(polynomial **p);
 double poly_eval(polynomial *p, double x);
 
 polynomial *poly_mult(polynomial *a, polynomial *b);
+
+int poly_real_roots(polynomial *p, double *solutions, size_t sz);

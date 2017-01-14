@@ -292,3 +292,30 @@ double poly_eval(polynomial *p, double x)
     }
     return(sum);
 }
+
+int poly_real_roots(polynomial *p, double *solutions, size_t sz)
+{
+    //Tries to find solutions for the polynomial as per the instructions...
+    //supplies numbers, counted up from zero until either the supplied number
+    //for maximum solutions is filled or the arbitrary limit is hit, to be
+    //substituted for x, feeding them to poly_eval and checking (as per the
+    //instructions) for values of zero, and adding them to solutions.
+    //Though by those instructions I don't see how a solution could be found
+    //with a single polynomial.'
+    int result = 0;
+    double ret = 0;
+    int count = 0;
+    size_t index = 0;
+    while((index < sz) && (count < 1000))//1000 is an arbitrary limit.
+    {
+        ret = poly_eval(p, count);
+        if(ret == 0)
+        {
+            solutions[index] = ret;
+            ++index;
+        }
+        ++count;
+    }
+    result += index;
+    return(index);
+}
