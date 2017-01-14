@@ -49,7 +49,6 @@ main(
     poly_print(a);
 
     polynomial *mult = poly_mult(first, a);
-
     puts("\n\n~~~~~~~~~~~~~~~");
     poly_print(first);
     puts("");
@@ -57,6 +56,22 @@ main(
     puts("");
     poly_print(mult);
     puts("\n~~~~~~~~~~~~~~~");
+
+
+    polynomial *one = term_create(21, 3);
+    polynomial *two = term_create(-35, 2);
+    polynomial *three = term_create(7, 1);
+    one->next = two;
+    polynomial *div = poly_div(one, three);
+    puts("\n\n~~~~~~~~~~~~~~~");
+    poly_print(first);
+    puts("");
+    poly_print(a);
+    puts("");
+    poly_print(div);
+    puts("\n~~~~~~~~~~~~~~~");
+
+
 
     poly_destroy(mult);
     poly_destroy(first);
