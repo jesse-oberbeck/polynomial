@@ -23,7 +23,7 @@ int main(void)
     //c->next = d;
     //d->next = e;
     puts("pre sort~~");
-    polySort(&a);
+    poly_sort(&a);
     puts("a1");
     poly_print(a);
     puts("~~post sort");
@@ -51,14 +51,6 @@ int main(void)
     puts("");
     poly_print(mult);
     puts("\n~~~~~~~~~~~~~~~");
-    
-    
-    
-    puts("\nMULT");
-    double solutions[10];
-    int num = poly_real_roots(first, solutions, 10);
-    printf("num results: %d\n", num);
-    puts("\nMULT");
 
     poly_destroy(mult);
     poly_destroy(first);

@@ -27,10 +27,8 @@ char *poly_to_string( polynomial *p);
 
 bool poly_equal(polynomial *a, polynomial *b);
 
-void polySort(polynomial **p);
+void poly_sort(polynomial **p);
 
 double poly_eval(polynomial *p, double x);
 
 polynomial *poly_mult(polynomial *a, polynomial *b);
-
-int poly_real_roots(polynomial *p, double *solutions, size_t sz);
