@@ -15,13 +15,13 @@ int main(void)
     polynomial *a = term_create(4, 1);
     polynomial *b = term_create(12, 3);
     polynomial *c = term_create(19, 5);
-    polynomial *d = term_create(4, 1);
-    polynomial *e = term_create(3, 0);
+    //polynomial *d = term_create(4, 1);
+    //polynomial *e = term_create(3, 0);
 
     a->next = b;
     b->next = c;
-    c->next = d;
-    d->next = e;
+    //c->next = d;
+    //d->next = e;
     puts("pre sort~~");
     polySort(&a);
     puts("a1");
@@ -42,7 +42,17 @@ int main(void)
     printf("eval: %lf\n", poly_eval(first, 2));
     puts("a2");
     poly_print(a);
+    
+    polynomial *mult = poly_mult(first, a);
+    puts("\n\n~~~~~~~~~~~~~~~");
+    poly_print(first);
+    puts("");
+    poly_print(a);
+    puts("");
+    poly_print(mult);
+    puts("\n~~~~~~~~~~~~~~~");
 
+    poly_destroy(mult);
     poly_destroy(first);
     poly_destroy(a);
     poly_destroy(sum);

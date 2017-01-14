@@ -1,4 +1,4 @@
-
+#include <stdbool.h>
 struct term {
     int coeff;
     unsigned int exp;
@@ -31,3 +31,4 @@ void polySort(polynomial **p);
 
 double poly_eval(polynomial *p, double x);
 
+polynomial *poly_mult(polynomial *a, polynomial *b);

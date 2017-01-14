@@ -1,15 +1,16 @@
 CPPFLAGS+=-Wall -Wextra -Wpedantic
 CPPFLAGS+=-Wwrite-strings -Wstack-usage=1024 -Wfloat-equal
-CPPFLAGS+=-Waggregate-return -Winline
+CPPFLAGS+=-Waggregate-return -Winline -g
 
 CFLAGS+=-std=c11
 
 LDLIBS+=-lm
 
 BIN=test
-DEPS=polynomial.o
+OBJ=polynomial.o
+DEPS=polynomial.h
 
-$(BIN) : $(DEPS)
+$(BIN) : $(OBJ)
 
 .PHONY: debug profile clean
 
